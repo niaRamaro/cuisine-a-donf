@@ -52,8 +52,10 @@ function find(req: Request, res: Response): void {
   res.json("find salad");
 }
 
-function list(req: Request, res: Response): void {
-  res.json("list salad");
+async function list(req: Request, res: Response): Promise<void> {
+  const salads = await getCollection(req).find().toArray();
+
+  res.json(salads);
 }
 
 function remove(req: Request, res: Response): void {
