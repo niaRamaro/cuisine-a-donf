@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import Joi from "joi";
-import { Collection } from "mongodb";
+import { Collection, ObjectId } from "mongodb";
 
 export type Salad = {
   name: string;
@@ -48,14 +48,34 @@ async function create(
   mongoResult.insertedCount ? res.json(newSalad) : next(new Error());
 }
 
-function find(req: Request, res: Response): void {
-  res.json("find salad");
+async function find(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { id } = req.params;
+
+    const salad = await getCollection(req).findOne({ _id: new ObjectId(id) });
+
+    salad ? res.json(salad) : res.status(404).json(`Salad ${id} not found`);
+  } catch (e) {
+    next(new Error());
+  }
 }
 
-async function list(req: Request, res: Response): Promise<void> {
-  const salads = await getCollection(req).find().toArray();
+async function list(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const salads = await getCollection(req).find().toArray();
 
-  res.json(salads);
+    res.json(salads);
+  } catch (e) {
+    next(new Error());
+  }
 }
 
 function remove(req: Request, res: Response): void {
