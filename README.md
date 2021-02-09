@@ -1,5 +1,10 @@
 # cuisine-a-donf
-A small POC for a university project
+
+A small POC for a university project. Used :
+- Typescript
+- Node.js
+- MongoDB 
+- Docker
 
 ## Usage
 
